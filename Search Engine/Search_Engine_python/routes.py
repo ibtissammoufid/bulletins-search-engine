@@ -13,20 +13,7 @@ es = Elasticsearch(timeout=30)
 
 
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
+
 @app.route('/')
 @app.route("/home")
 def home():
@@ -48,6 +35,7 @@ def request_search():
     for hit in res['hits']['hits']:
         hit['good_summary'] = '….'.join(hit['highlight']['content'][1:])
     return render_template('results.html', res=res)
+
 
 
 
@@ -92,3 +80,29 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+
+
+
+
+@app.route("/saved")
+def saved():
+    posts = Post.query.filter_by(author=current_user)
+
+    return render_template('saved.html', posts=posts)
+
+@app.route("/results/<post_name>/<post_path>/add", methods=['GET', 'POST'])
+@login_required
+def newpost(post_name, post_path):
+    post = Post(title=post_name, content=post_path, author=current_user)
+    db.session.add(post)
+    db.session.commit()
+    posts = Post.query.all()
+    for post in posts :
+        if post.content == 'f':
+            db.session.delete(post)
+        db.session.commit()
+    flash('Your post has been created!', 'success')
+    return redirect(url_for('saved'))
+
+

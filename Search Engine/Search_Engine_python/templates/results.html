@@ -31,10 +31,10 @@
     <link rel="shortcut icon" type="image/ico" href="images/favicon.ico" />
     <link  href="../static/css/style.css" rel="stylesheet" />
     <style>
-body {
-  background-color: #E6E6FA;
-}
-</style>
+        body {
+            background-color: #E6E6FA;
+        }
+    </style>
 
 </head>
 <body style="background-image: url('../static/images/bg-01.jpg');">
@@ -48,10 +48,10 @@ body {
 
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a href="home" class="nav-link">Home</a></li>
+                <li class="nav-item active"><a href="search" class="nav-link">Search</a></li>
                 <li class="nav-item"><a href="about" class="nav-link">About</a></li>
                 <li class="nav-item"><a href="logout" class="nav-link">Log out</a></li>
-                <li class="nav-item"><a href="register.html" class="nav-link">History</a></li>
+                <li class="nav-item"><a href="saved" class="nav-link">saved files</a></li>
 
             </ul>
         </div>
@@ -94,7 +94,12 @@ body {
                     <div class="searchresult" style="font-size: 14px; line-height: 14px; color: #d00698; margin-bottom: 0px;">
                         <a href="file:///{{ hit['_source']['path']['real'] }}" target="_blank" ><h2>{{ hit['_source']['file']['filename'] }}</h2></a>
 
-                        <a>{{ hit['_source']['path']['real'] }}</a> <button>▼</button>
+                        <a>{{ hit['_source']['path']['real'] }}</a>
+                        <form action="{{ url_for('newpost', post_name=hit['_source']['file']['filename'] , post_path=hit['_source']['path']['real']) }}" method="POST">
+
+                            <a href="{{ url_for('newpost', post_name=hit['_source']['file']['filename'] , post_path=hit['_source']['path']['real']) }}" style="font-size: 14px;">▼ </a>
+                        </form>
+
                         <p>{{ hit['good_summary']}}</p>
 
                     </div>
